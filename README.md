@@ -14,15 +14,15 @@ This course consisted of nine 90-minute sessions to prepare incoming biostatisti
 - [Exercises](exercises/2018_Lecture3_Exercises.pdf)
 - [Solutions](solutions/2018_Lecture3_Solutions.pdf)
 
-### Graphing 
+### Graphing and data analysis
 
-- **Description**: graphing use ggplot2; Central Limit Theorem exercise
+- **Description**: graphing and data manipulation using tidyverse; Central Limit Theorem simulation exercise
 - [Exercises](exercises/2018_Lecture4_Exercises.pdf)
 - [Solutions](solutions/2018_Lecture4_Solutions.pdf)
 
 ### Linear regression
 
-- **Description**: brief overview of linear regression; interpreting regression parameters; motivation for OLS; implementation in R using the lm() function; more challenging group exercises
+- **Description**: brief overview of linear regression; interpreting regression parameters; motivation for OLS; implementation in R using the lm() function; more involved exercises
 - [Slides](slides/2018_Lecture_05.pdf)
 - [Exercises](exercises/2018_Lecture5_Exercises.pdf)
 - [Solutions](solutions/2018_Lecture5_Solutions.pdf)
