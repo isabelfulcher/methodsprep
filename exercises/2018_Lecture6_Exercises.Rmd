@@ -1,0 +1,141 @@
+---
+title: "Lecture 6 Exercises"
+author: "Isabel Fulcher"
+date: "8/14/2018"
+output: pdf_document
+urlcolor: blue
+---
+
+## Load packages 
+```{r,message=FALSE}
+library(matrixStats)
+library(knitr)
+library(tidyverse)
+library(reshape2)
+```
+
+# Population Mean Example
+Suppose you are interested in comparing the properties of the following 3 estimators for the maen $\mu$ for $n$ iid draws $X_1,...,X_n$ with $X_i \sim f(x)$ 
+
++ Sample mean, $T^1$
++ Sample 15% trimmed mean mean, $T^2$
++ Sample median, $T^3$
+
+How would you expect the estimators to compare if the distribution of $X_i$ is N(1,16)?
+
+## Step 1: Conduct the simulation
+```{r,results='hide'}
+#Set the seed
+set.seed(123456)
+
+#Set up simulation parameters and truth
+B = 500 #number of replicates
+true.mu = 1 #true population mean
+samp.size = 100 #sample size
+
+#Create a function to loop or apply over
+simulate <- function(n,mu,b){ 
+  #generate data
+  samp <- rnorm(n, mean=true.mu, sd=4) 
+  
+  #calculate relevant quantities
+  mean <- mean(samp)
+  mean_trim <- mean(samp,trim=0.15)
+  med <- median(samp)
+  
+  #return results 
+  return(c(mean,mean_trim,med))
+}
+
+#Simulate 500 times
+# Option 1: use sapply
+out.sapply <- sapply(1:B,simulate,n=samp.size,mu=true.mu) #this returns a 3xB matrix
+
+# Option 2: use a for loop
+out.for <- matrix(NA,B,3) #this will store results in a Bx3 matrix
+for (b in 1:B){
+  out.for[b,] <- simulate(n=samp.size,mu=true.mu,b) 
+}
+```
+
+
+## Step 2: Calculate the simulation quantities for each estimator
+```{r}
+#OPTION 1: BASE R
+# Mean  
+sim.mean <- colMeans(out.for)
+
+# Bias  
+sim.bias <- colMeans(out.for-true.mu)
+
+# Relative bias 
+sim.rel.bias <- colMeans(out.for-true.mu)/true.mu
+
+# Standard deviation
+sim.sd <- colSds(out.for)
+
+# Mean squared error 
+sim.mse <- sim.bias^2 + sim.sd^2 #bias^2 + variance
+
+# Combine all together
+df.results <- data.frame(rbind(sim.mean,sim.bias,sim.rel.bias,sim.sd,sim.mse))
+
+#OPTION 2: TIDYVERSE
+df.out <- data.frame(out.for)
+df.out %<>% rename(mean=X1,`trimmed mean`=X2,median=X3) %>% 
+  melt() %>% group_by(variable) %>%
+  summarise(sim.mean=mean(value),sim.bias=mean(value)-true.mu,
+            sim.rel.bias=(mean(value)-true.mu)/true.mu,
+            sim.sd = sd(value),
+            sim.mse = (mean(value)-true.mu)^2 + sd(value)^2) #one command!
+```
+
+## Step 3: Present your results
+```{r}
+kable(df.results,digits=3,align=rep('c', 2),
+      col.names=c("mean","trimmed mean","median"))
+```
+
+# Simulation exercise 
+
+```{r,message=FALSE}
+library(MASS) 
+```
+
+What happens if I exclude a covariate from my model? This follows from the first question on slide 6, 
+
+$$E[Y | X_1, X_2] = \beta_0 + \beta_1 X_1 + \beta_2 X_2 $$
+
+$$E[Y | X_1]  = \alpha_0 + \alpha_1 X_1$$
+The goal of this exercise is to say when $\hat{\alpha_1}$ is unbiased for $\beta_1$. 
+
+
+1. Write a function that takes in $b$, $n$, $\Sigma$, $\lambda$, $\beta_0$, $\beta_1$, and $\beta_2$ and performs the following analysis:
+
++  Generate an $n \times 2$ matrix containing the predictors $X_1$ and $X_2$ from a $MVN(0_{2 \times 1}, \Sigma_{2 \times 2})$ where $\Sigma_{2 \times 2}$ is the covariance matrix (the MASS package has a function called mvrnorm)
+
++  Generate an outcome vector with $n$ observations $\mathbf{y} = \beta_0 + \beta_1 X_1 + \beta_2 X_2 + \boldsymbol{\epsilon}$ where $\epsilon_i \sim N(0, \lambda^2)$ and $X_1$ and $X_2$ come from above
+
++ Fit the unadjusted model $E[Y \mid X_1] = \alpha_0 + \alpha_1 X_1$
+
++ Return the coefficient estimates from the unadjusted model, i.e. $\hat{\alpha}_0$ and $\hat{\alpha}_1$
+
+2. Use your function to repeat the above analysis $B=1000$ times with $n = 500$, $\lambda = 1$, $\beta_0 = 2$, $\beta_1 = 4$, for the four scenarios: 
+
++ Scenario 1: $\beta_2 = 2$ and 
+$$\Sigma = \begin{bmatrix} 2 & 0.3 \\ 0.3 & 2 \end{bmatrix}$$ 
++ Scenario 2: $\beta_2 = 0$ and 
+$$\Sigma = \begin{bmatrix} 2 & 0.3 \\ 0.3 & 2 \end{bmatrix}$$
++ Scenario 3: $\beta_2 = 2$ and 
+$$\Sigma = \begin{bmatrix} 2 & 0 \\ 0 & 2 \end{bmatrix}$$
++ Scenario 4: $\beta_2 = 0$ and 
+$$\Sigma = \begin{bmatrix} 2 & 0 \\ 0 & 2 \end{bmatrix}$$
+
+
+3. For all scenarios, compute the bias of the coefficient estimates of $\alpha_0$ and $\alpha_1$. Create a table with these results (columns should be scenarios). 
+
+4. Using a boxplot, plot the coefficient estimates for $\alpha_1$ for each scenario. Indicate the true value of $\beta_2$ on the plot.
+
+5. Under which scenarios is $\hat{\alpha}_1$ unbiased for $\beta_1$? Any other observations?
+
+

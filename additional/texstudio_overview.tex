@@ -1,0 +1,176 @@
+\documentclass[11pt, oneside]{article}   
+\usepackage{geometry} % See geometry.pdf to learn the layout options. There are lots.
+\geometry{letterpaper,margin=1in}                 
+\usepackage{amssymb} 
+\usepackage{amsmath}
+\usepackage{color} 
+\usepackage{graphicx} % for graphics		
+\usepackage{hyperref} % creates hyperlinks
+
+
+\title{An introduction to \LaTeX} %title goes here
+%\date{}			% Activate to display a given date or no date
+
+\author{Your Name Here} 
+
+\begin{document}
+	\maketitle
+
+\section{Section headers}
+
+You will likely organize your \TeX \ file using sections, 
+
+\subsection{A subsection header}
+
+and subsections, 
+
+\subsubsection{A subsubsection header}
+
+and subsubsections! 
+
+\subsubsection*{A sub sub section header}
+
+You can also remove the numbering on a section header.
+
+\section{Creating lists} 
+
+You can create an itemized list easily, 
+\begin{itemize}
+	\item item 1
+	\item item 2 
+	\item ... 
+\end{itemize}
+
+\noindent You can create enumerate a list as well, 
+\begin{enumerate}
+	\item item 1
+	\item item 2 
+	\item ... 
+\end{enumerate}
+
+\section{Text styles} 
+
+You can \textbf{bold}, \textit{italicize}, \underline{underline}, and add \color{red} color \color{black} to text. You can also change the \large{font} \huge{size}. \normalsize
+
+\begin{verbatim}
+In the verbatim environment, you are safe to write any_thing?$!%^! without error
+\end{verbatim}
+
+\section{Math mode} 
+
+
+\subsection{Common-use commands and symbols} 
+If I want to type math within a sentence, I can enclose the mathematical expression within single dollar signs (see below), 
+
+\begin{itemize}
+	\item Greek letters: $\beta$, $\alpha$, $\pi$, $\epsilon$, $\varepsilon$, $\gamma$, $\Gamma$, $\tau$, $\rho$, $\phi$, $\Phi$, $\varphi$, $\psi$, $\chi$, $\sigma$, $\Sigma$
+	\item Other symbols: $\perp$, $\implies$, $\rightarrow$, $\sim$, $\in$,  $\therefore$
+	\item (In)equalities: $\equiv$, $\approx$, $\geq$, $\leq$ 
+	\item Operators: $\sum$, $\sum_{i=1}^n$, $\prod$, $\prod_{i=1}^n$, $\int$, $\int_{0}^{1}$, $\bigcup$, $\bigcap$, $\binom{n}{k}$
+	\item Fractions:  $\frac{1}{2}$
+	\item Exponents / superscripts: $e^x$, $e^{x+1}$
+	\item Subscripts: $\beta_i$, $\beta_{i+1}$ 
+	\item Hats: $\hat{\beta}$, $\widehat{\beta}$, $\tilde{\beta}$
+	\item Bold: $\mathbf{X}$, $\boldsymbol{\beta}$
+\end{itemize}
+
+\noindent Here is a more comprehensive \href{https://oeis.org/wiki/List_of_LaTeX_mathematical_symbols}{list}. Also, if you ever get stuck and cannot find the symbol you want via google, this \href{http://detexify.kirelabs.org/classify.html}{site} is amazing.
+
+\subsection{Display style in math mode} 
+
+ If you want a stand alone equation (on its own line and centered),  enclose the mathematical expression within double dollar signs. For example, we can write the following linear model with parameters $\beta_0$ and $\beta_1$, 
+
+$$ E[Y_i | X_i] = \beta_0 + \beta_1 X_i $$
+
+\noindent For proofs or listing multiple equations, you will want to align the equations, 
+
+\begin{align}
+\mathcal{L}(p) & = \prod_{i=1}^n p^{y_i} (1-p)^{1-y_i} \\ 
+& = p^{\sum_{i=1}^n y_i} (1-p)^{n - \sum_{i=1}^n y_i} 
+\end{align}
+
+\noindent To easily reference these equations later, give them labels.
+
+\begin{align}
+\mathcal{L}(p) & = \prod_{i=1}^n p^{y_i} (1-p)^{1-y_i} \label{bernoulli_lik_1} \\ 
+& = p^{\sum_{i=1}^n y_i} (1-p)^{n - \sum_{i=1}^n y_i} \label{bernoulli_lik_2}
+\end{align}
+
+\noindent Then, we can reference the above equations \ref{bernoulli_lik_1} and \ref{bernoulli_lik_2} easily. If you do not want any equation numbers, replace align with align*
+
+\begin{align*}
+\mathcal{L}(p) & = \prod_{i=1}^n p^{y_i} (1-p)^{1-y_i} \\ 
+& = p^{\sum_{i=1}^n y_i} (1-p)^{n - \sum_{i=1}^n y_i} 
+\end{align*}
+
+\subsection{Brackets and Parentheses}
+
+You can use parentheses, braces, and brackets to organize your equations.  
+
+$$  f \left( x | \mu, \sigma^2 \right) = \frac{1}{\sqrt{2\pi} \sigma } \exp \left\{ -\frac{1}{2\sigma^2} \left[ x - \mu \right]^2  \right\}  $$
+
+\subsection{Matrices} 
+
+You can create matrices of any size using bmatrix, 
+
+\[
+\begin{bmatrix}
+1 & 0 \\ 
+0 & 1 
+\end{bmatrix}^{-1} 
+=
+\begin{bmatrix}
+1 & 0 \\ 
+0 & 1 
+\end{bmatrix}
+\]
+
+\noindent You can use dots to fill in blank space for larger matrices
+
+\[
+\mathbf{X} 
+=
+\begin{bmatrix}
+1& X_{12} & X_{13} & \dots  & X_{1p} \\
+1 & X_{22} & X_{23} & \dots  & X_{2p} \\
+\vdots & \vdots & \vdots & \ddots & \vdots \\
+1& X_{n2} & X_{n3} & \dots  & X_{np}
+\end{bmatrix}
+\]
+
+\section{Tables} 
+If you are using output from R and for some reason have decided not to use Rmarkdown, you can have R print out your tables in \LaTeX \ using the \ttfamily{stargazer} \normalfont or \ttfamily{xtable} \normalfont packages. Then, you can easily copy \& paste into your tex file. \\
+
+\begin{table}[!htb] 
+	\caption{My first table} 
+	\centering
+	\begin{tabular}{lcccc} 
+	 	&  Estimates & SE & 95\% CI &  \\
+	$\widehat{\beta_0}$	& 2.34 & 0.74 & (1.47,3.23)  &  \\
+	$\widehat{\beta_1}$ & 0.60 & 0.16 & (0.02,1.21)   &  \\
+	$\widehat{\beta_2}$	& -1.52 & 0.48 & (-2.34, -0.82) & 
+	\end{tabular}
+\end{table}
+
+\noindent If you want to get creative (i.e. add borders, merge rows, etc.), I find it easier to use this \href{http://www.tablesgenerator.com/}{website} to create your tables for you.
+
+\newpage %this creates a page break
+
+\section{Graphics}
+If you want to include an image in your file, the image needs to be saved in the same folder as your tex file, or you need to specify the file path. You can also tweak the height and width of the image. If you want to get more creative than this, I recommend this \href{https://en.wikibooks.org/wiki/LaTeX/Floats,_Figures_and_Captions#Figures_in_multiple_parts}{wiki page}. 
+
+\begin{center}
+\includegraphics[scale=.5]{image}
+\end{center}
+
+\section{Other tips, tricks, and references}
+
+\begin{itemize}
+	\item \textbf{Things \LaTeX \ is picky about:} dollar signs, brackets, percentages, underscores (outside of math mode), and ampersands. To use these add a backslash before them, i.e. \$ \% \_ \&. Also, when you want to use "quotes" do ``this".
+	\item When you begin writing papers, you should use \href{http://www.bibtex.org/}{BibTeX} to compile your references for you. It will make your life so much easier.  
+	\item To create graphical diagrams (e.g. DAGs), use the TikZ package
+	\item You can define new  \href{https://www.sharelatex.com/learn/Commands#Defining_a_new_command}{command shortcuts} for yourself, that way you do not have to type out the more lengthily commands
+\end{itemize}
+
+
+\end{document}

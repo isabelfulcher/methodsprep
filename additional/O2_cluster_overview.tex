@@ -1,0 +1,186 @@
+\documentclass[11pt, oneside]{article}   	% use "amsart" instead of "article" for AMSLaTeX format
+\usepackage{geometry}                		% See geometry.pdf to learn the layout options. There are lots.
+\geometry{letterpaper,margin=.8in}                   		% ... or a4paper or a5paper or ... 
+%\geometry{landscape}                		% Activate for rotated page geometry
+%\usepackage[parfill]{parskip}    		% Activate to begin paragraphs with an empty line rather than an indent
+\usepackage{graphicx}				% Use pdf, png, jpg, or eps§ with pdflatex; use eps in DVI mode
+% TeX will automatically convert eps --> pdf in pdflatex		
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{subfig}
+\usepackage{color}
+\usepackage{graphicx}
+\usepackage{hyperref}
+
+\title{Cluster computing with R using O2}
+%\date{}							% Activate to display a given date or no date
+
+\author{Isabel Fulcher}
+
+\begin{document}
+	\maketitle
+	
+\section{Getting started}
+
+Once you have an account on O2, you can logon via your terminal window. For windows users, you should download \href{https://www.putty.org/}{PuTTY} to access a terminal window. 
+
+\begin{itemize}
+	\item Open terminal on your computer
+	\item To logon to O2, type the following command (you need to be connected to the internet): 
+	
+	\begin{center}
+		\ttfamily{ssh -l <userid> o2.hms.harvard.edu}
+	\end{center}
+	
+	\item You will be prompted to enter your password 
+	\item To navigate your folders on the server, you can use basic terminal commands. Here are some common ones: 
+	\begin{itemize}
+		\item \tt{cd} \normalfont changes your directory so you should specify the path afterwards
+		\item \tt{cd ..} \normalfont moves one level up from the current directory/folder you are in
+ 		\item \tt{ls} \normalfont lists the contents of the current directory/folder you are in 
+ 		\item \tt{mkdir new\_folder} \normalfont creates a new directory/folder called \ttfamily{new\_folder}
+ 		\item \tt{rm new\_folder}  \normalfont deletes the \ttfamily{new\_folder} \normalfont folder (be careful!)
+ 		\item A comprehensive list can be found \href{https://github.com/0nn0/terminal-mac-cheatsheet/blob/master/README.md}{here}
+	\end{itemize}
+\end{itemize}
+	
+\section{Working with R on the server}
+
+There are two reasons I work with R on the server: (1) to install packages and (2) test code. 
+
+\begin{itemize}
+	\item To open R on the cluster, you need to start an interactive job
+	
+	\begin{center}
+	 \tt{srun --pty -p interactive --mem 4G -t 0-06:00 /bin/bash}
+	\end{center}
+	
+	You can change the specified time and memory
+	
+	\item Once your resources have been allocated, enter the following command
+	
+	\begin{center}
+		\ttfamily{module load gcc/6.2.0 R/3.4.1}
+	\end{center}
+
+then enter \ttfamily{R} \normalfont. Note you can also use \ttfamily{R} \normalfont 3.4.1 or 3.5.1, but you will need to reinstall your packages on each version. 
+	
+	\item You should now be in the R environment. You can directly enter \ttfamily{install.packages()} \normalfont. This will ensure that the package is installed on your server. 
+	
+	\item To close out of R, enter \ttfamily{q()} \normalfont 
+	\item More information about using R on O2 can be found \href{https://wiki.rc.hms.harvard.edu/display/O2/Personal+R+Packages}{here}
+\end{itemize}
+	
+\section{Steps to submit a job}
+
+The O2 cluster uses SLURM to submit jobs, so that is what is outlined here. The Odyssey (FAS computing cluster) also uses SLURM, so if you get an account here, you will already be familiar with the syntax. There are other schedulers, such as LSF and SGE, that you may encounter on different clusters. 
+
+\subsection*{Step 1. Prepare your R script(s)} 
+
+Before you submit a job to the cluster, you likely have R code that you want to execute. This code needs to contained in an R script  with the following considerations: 
+
+\begin{itemize}
+	\item All packages needed for your code must be loaded at the beginning of the script (this is very similar to R markdown). Also, make sure they are installed on your server (see Section 2). 
+	\item If you pass any values into your R script (i.e. array jobs), you need to make sure these are defined in your R script
+	\item If you reference other R scripts or data files in your R script, double check the file path! 
+	\item At the end of your R script, you should consolidate your results. This may involve reporting one table or multiple different objects. If you are doing the latter, it may be helpful to consolidate this into a list and use \ttfamily{saveRDS()} \normalfont. 
+	\item Note the results will be saved in the server folder where your shell file lives, so if you would prefer it be somewhere else, you need to specify that file path!
+\end{itemize} 
+
+
+\subsection*{Step 2. Create your submission (shell) script} 
+
+A shell script tells the cluster everything it needs to know to complete your job. Most importantly, it details the name and location of the R script you want to run (from Step 1). It also will contain information on the time and storage required for the job, where to send error messages, and the partition to run it on (short, medium, long). You can use a basic text editor to create your shell scripts. The O2 wiki page gives a  \href{https://wiki.rc.hms.harvard.edu/display/O2/Using+Slurm+Basic}{detailed overview} on the exact layout of these files.
+
+\subsection*{Step 3. Transfer all necessary files to the cluster} 
+
+Using a file transfer software (i.e. FileZilla), you need to move all of the files necessary for your job from your computer to the server. The first time you use FileZilla, you will need to logon to the server via FileZilla and enter your account information.
+
+\begin{itemize}
+	\item Open FileZilla
+	\item The host name you should enter is: \ttfamily{transfer.rc.hms.harvard.edu} \normalfont
+	\item The port is 22
+	\item Enter your own username and password
+\end{itemize}
+
+\noindent \textbf{Note: keep track of your file locations and setup a workflow that makes the most sense to you!} 
+
+\subsection*{Step 4. Run your job} 
+
+\begin{itemize}
+	\item Log on to O2 and navigate to the folder that contains your shell script (which should also contain your other files for the job)
+	\item Enter the following command to execute your shell script: 
+	
+	\begin{center}
+		\ttfamily{sbatch myshell.sh}
+	\end{center}
+	
+	\item \normalfont If you are submitting job array, the command will look something like: 
+	
+	\begin{center}
+	\ttfamily{sbatch --array=1-10 myshell.sh} 
+	\end{center}
+	
+	\item \normalfont There are numerous ways to get fancy with submitting jobs. Once you get to this stage, the best solution is to google.  
+\end{itemize}
+
+
+\subsection*{Step 5. Check on your job} 
+
+\begin{itemize}
+	\item To check on the status of all your currently running jobs (replace userid with your O2 login / ecommons ID): 
+	
+	\begin{center}
+		\ttfamily{squeue -u <userid>}
+	\end{center}
+	
+	\item To check on the status of a specific job (you need to replace jobid with the numerical ID assigned to the job): 
+	
+		\begin{center}
+		\ttfamily{sacct -j <jobid>}
+	\end{center}
+	
+	 \item To get some more information on the above, such as time elapsed, 
+	 
+	 \begin{center}
+	 	\ttfamily{sacct -j <jobid> --format=jobid,state,elapsed}
+	 \end{center}
+
+	\item To cancel an existing job, 
+	
+	\begin{center}
+		\ttfamily{scancel <jobid>}
+	\end{center}
+	
+	 
+\end{itemize}
+
+\subsection*{Step 6. Transfer files back to your computer} 
+
+When a job is complete, you will get an e-mail notification. Hopefully, the e-mail subject line will read ``COMPLETE", but more often than not, it will say ``FAILED". In the case that your job successfully completed, you should: 
+
+\begin{itemize}
+	\item Log on to FileZilla 
+	\item Transfer the output files back to your computer
+	\item If your results are spread out over multiple files (happens with array jobs), you will want to consolidate them. I recommend creating another R script that gathers all of your results. This way you can view them all in one place instead of trying to view or copy and paste from multiple files. 
+\end{itemize}
+
+\noindent If your job failed, then you will likely want to find the reason for this. Sometimes, this will be apparent from the subject line of the e-mail. However, you will often need more information. Fortunately, SLURM creates error files containing details about the error. You can also download these files to your computer and read them in a texteditor. Or you can use the following shortcut to view the files in the terminal, 
+
+\begin{center}
+	\ttfamily{vi <file\_name>}
+\end{center}
+
+\noindent and then you can use \ttfamily{:q} \normalfont to close the screen when you are done. 
+
+\section{Things you may want to look into...}
+
+\begin{itemize}
+	\item You can setup a \ttfamily{.bashrc} \normalfont to create shortcuts for logging on to O2
+	\item Instead of using FileZilla, you can use your GitHub account to transfer files (great for version control)
+	\item You can also pass in arguments from your sbatch command without using an array (or in addition to an array!). 
+	\item If you want to run a job in parallel, use the doParallel package in R. This is nice because it will gather all your results for you (i.e. you will not get a bunch of output files like you do for an array job). 
+\end{itemize}
+
+
+\end{document}
