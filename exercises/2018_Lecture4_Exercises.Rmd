@@ -33,7 +33,6 @@ filter(Blackmore,group=="patient")
 
 # You can also just use base R
 Blackmore[Blackmore$group=="patient",]
-
 ```
 
 ### Pick variables by their names with select()
@@ -94,13 +93,11 @@ p <- ggplot(Blackmore,aes(x=exercise))
 
 # Add layer 
 p1 <- p + geom_histogram() 
-p1
 
 p2 <- p + geom_histogram(aes(y=..density..))
-p2
 
 # Make pretty
-p2 + theme_bw()
+p3 <- p2 + theme_bw()
 ```
 
 ### Saving graphics 
