@@ -29,7 +29,7 @@ This course consisted of nine 90-minute sessions to prepare incoming biostatisti
 
 ### Simulation studies
 
-- **Description**: formal introduction to simulation studies; monte carlo error; confounding bias simulation exercise in R
+- **Description**: introduction to Monte Carlo simulation; commonly reported operating characteristics; confounding bias simulation exercise in R
 - [Slides](slides/2018_Lecture_06.pdf)
 - [Exercises](exercises/2018_Lecture6_Exercises.pdf)
 - [Solutions](solutions/2018_Lecture6_Solutions.pdf)
