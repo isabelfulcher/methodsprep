@@ -22,7 +22,7 @@ This course consisted of nine 90-minute sessions to prepare incoming biostatisti
 
 ### Linear regression
 
-- **Description**: brief overview of linear regression; interpreting regression parameters; motivation for OLS; implementation in R using the lm() function; more involved exercises
+- **Description**: introduction to linear regression; interpreting regression parameters; motivation for ordinary least squares; implementation in R using the lm() function; more involved exercises
 - [Slides](slides/2018_Lecture_05.pdf)
 - [Exercises](exercises/2018_Lecture5_Exercises.pdf)
 - [Solutions](solutions/2018_Lecture5_Solutions.pdf)
@@ -36,7 +36,7 @@ This course consisted of nine 90-minute sessions to prepare incoming biostatisti
 
 ### Maximum Likelihood Estimation
 
-- **Description**: overview of maximum likelihood theory with application linear and logistic regression; very brief introduction to glms; practice with the optim() function in R
+- **Description**: overview of maximum likelihood theory with application to linear and logistic regression; very brief introduction to glms; practice with the optim() function in R
 - [Slides](slides/2018_Lecture_07.pdf)
 - [Exercises](exercises/2018_Lecture7_Exercises.pdf)
 - [Solutions](solutions/2018_Lecture7_Solutions_ex2.pdf)
