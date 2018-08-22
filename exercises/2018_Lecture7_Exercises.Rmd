@@ -31,36 +31,15 @@ $$ \ell(\beta_0,\beta_1,\beta_2) = \sum_{i=1}^n -\log(\sqrt{2\pi}\sigma) - \frac
 
 1. Write a function that calculates the negative log-likelihood and takes in values for $Y$, $X_1$, and $X_2$, which are all vectors of length n, and a vector for the unknown parameters, i.e. $\{ \beta_0, \beta_1, \beta_2, \sigma^2 \}$.  
 ```{r}
-loglik <- function(par,Y,X){
-  beta <- par[1:3]
-  sigma2 <- par[4]
-  l <- sum(log(sqrt(2*pi*sigma2)) + (1/(2*sigma2))*(Y-X%*%beta)^2)
-  return(l)
-}
 ```
 
 
 2. Use the optim() function to find the the MLE of $\boldsymbol{\beta}$ when the outcome $Y$ is birthweight, $X1$ is smoking, and $X2$ mother's weight. NOTE: you would not typically do this in practice because there is a closed-form solution (recall OLS estimates!). This is just for illustration.
 ```{r,message=FALSE,error=FALSE,warning=FALSE,cache=TRUE}
-X <- cbind(1,infants$smoker,infants$gained)
-Y <- infants$weight
-
-fit.optim <- optim(runif(4,0,1),loglik,Y=Y,X=X,method="BFGS")
-
-beta.optim <- fit.optim$par[1:3]
 ```
 
 3. Calculate the OLS estimate for $\boldsymbol{\beta}$ using R and the analytical expression give in Lecture 5. How does this compare to the above? 
 ```{r, results='hide'}
-#Using lm() function
-fit.ols1 <- lm(weight ~ smoker + gained, data=infants)
-beta.ols1 <- coefficients(fit.ols1)
-
-#Using actual values
-beta.ols2 <- t(solve(crossprod(X))%*%t(X)%*%Y)
-
-#Compare all methods
-beta.ols1 ; beta.ols2 ; beta.optim
 ```
 
 
@@ -82,31 +61,14 @@ $$ \ell(\alpha_0,\alpha_1,\alpha_2) = \sum_{i=1}^n Y_i(\alpha_0 + \alpha_1 X_{i1
 
 ```{r}
 infants %>% mutate(weight.binary = ifelse(weight <= 2.5,1,0)) -> infants # create new outcome
-
-negloglik <- function(par,Y,X){
-  alpha <- par[1:3]
-  l <- sum(-(Y*(X%*%alpha)) + log(1 + exp(X%*%alpha)))
-  return(l)
-}
-
 ```
 
 2. Use the optim() function to estimate the the MLE of $\boldsymbol{\alpha}$ in this dataset.
 ```{r}
-X <- cbind(1,infants$smoker,infants$gained)
-Y <- infants$weight.binary
-
-fit.optim <- optim(runif(4,0,1),negloglik,Y=Y,X=X,method="BFGS")
-
-beta.optim <- fit.optim$par[1:3]
 ```
 
 3. Check your answer using the built-in R function for logistic regression (and estimation of parameters in GLMs in general). Use the glm() function, 
 ```{r, eval=FALSE}
-# the glm() function has the following form 
-# replace with your data, but keep the family argument
-fit.glm <- glm(infants$weight.binary ~ infants$smoker + infants$gained, family=binomial) 
-summary(fit.glm)
 ```
 
 
