@@ -4,7 +4,7 @@ This course consisted of nine 90-minute sessions to prepare incoming biostatisti
 
 ### Flow control 
 
-- *Description:* practice with for and while loops, the apply family, and conditional statements in R.
+**Description:** practice with for and while loops, the apply family, and conditional statements in R.
 - [Exercises](exercises/2018_Lecture2_Exercises.pdf)
 - [Solutions](solutions/2018_Lecture2_Solutions.pdf)
 
