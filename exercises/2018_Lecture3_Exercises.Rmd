@@ -13,17 +13,10 @@ library("knitr")
 
 1. Generate 10 draws from a normal random variable with mean 5 and variance 4. What is the sample mean of these variables? What is the true mean? 
 ```{r} 
-set.seed(12) 
-xsamp <- rnorm(10,5,2)
-mean(xsamp)
-
 ```
 
 2. How would you expect the previous answer to change if we increased the number of draws to 10,000? Check your intuition.
 ```{r} 
-set.seed(12)
-xsamp <- rnorm(10000,5,2)
-mean(xsamp)
 ```
 
 3. The probability density function (pdf) for a normal random variable $X$ with mean $\mu$ and variance $\sigma^2$ is as follows, 
@@ -33,76 +26,36 @@ $$f_X(x) = \frac{1}{\sqrt{2\pi}\sigma} exp(\frac{1}{2\sigma^2}(x - \mu)^2) $$
 What is the value of $f_X(0)$ when $\mu=0$ and $\sigma^2 = 2$? Calculate using the above expression and built-in R function. 
 
 ```{r} 
-(1/sqrt(2*pi*2))
-
-dnorm(0,0,sqrt(2))
-
 ```
 
 4. If $X \sim N(5,4)$, what is $P(X < 2)$? What is $P(X \leq 2)$? What is $P(X > 2)$?
 ```{r} 
-#P(X<2)
-pnorm(2,5,2)
-#P(X<=2)
-pnorm(2,5,2)
-#P(X>2)
-1-pnorm(2,5,2)
-pnorm(2,5,2,lower.tail = FALSE)
 ```
 
 
 # Poisson distribution exercises
 1. Generate a random sample of size 100,000 from a Poisson distribution with rate parameter 5
 ```{r} 
-set.seed(80417)
-xsamp <- rpois(100000,5)
 ```
 2. Compute the sample mean and variance. What do you notice?
 ```{r} 
-mean(xsamp)
-var(xsamp)
-
 ```
 3. Compute the empirical estimates of $P(X = 0)$, $P (X = 1)$, and $P(X = 2)$ for $X \sim Pois(5)$ from your sample. 
 ```{r} 
-mean(xsamp == 0)
-mean(xsamp == 1)
-mean(xsamp == 2)
-
-est <- sapply(0:2, function(x) mean(xsamp == x))
 ```
 4. Compare the estimates to the true value of the probability mass function (pmf) at $x=0,1,2$. Use the pmf and the built-in R function. Note the pmf is given by: 
 
 $$ P(X=x) = \frac{\lambda^x e^{-\lambda}}{x!} \textrm{ where } x \in 0,1,2,... \textrm{ and } \lambda > 0$$
 
 ```{r} 
-dpois(0:2,5)
-est
-
-sapply(0:2,dpois,lambda=5)
-
 ```
 
 5. Compute an estimate of $P(0 < X < 3)$ from the sample and compare to true value. 
 ```{r} 
-mean((xsamp < 3) & (xsamp > 0))
-
-dpois(2,5) + dpois(1,5)
-ppois(2,5) - ppois(0,5)
-
 ```
 
 6. Find the smallest $k$ such that $0.30 < P(X < k)$ for $X \sim Pois(5)$ using a while loop. Then, do this using a built-in R function. 
 ```{r}
-cdf_k = 0
-k = 0
-while(cdf_k < 0.3){
-  k=k+1
-  cdf_k = ppois(k,lambda=5)
-}
-k
-
-qpois(.3,5)
 ```
 
 
