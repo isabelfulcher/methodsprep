@@ -21,7 +21,7 @@ library("knitr")
 
 3. The probability density function (pdf) for a normal random variable $X$ with mean $\mu$ and variance $\sigma^2$ is as follows, 
 
-$$f_X(x) = \frac{1}{\sqrt{2\pi}\sigma} exp(\frac{1}{2\sigma^2}(x - \mu)^2) $$
+$$f_X(x) = \frac{1}{\sqrt{2\pi}\sigma} exp(-\frac{1}{2\sigma^2}(x - \mu)^2) $$
 
 What is the value of $f_X(0)$ when $\mu=0$ and $\sigma^2 = 2$? Calculate using the above expression and built-in R function. 
 
