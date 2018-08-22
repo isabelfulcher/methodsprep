@@ -41,7 +41,7 @@ This course consisted of nine 90-minute sessions to prepare incoming biostatisti
 - [Exercises](exercises/2018_Lecture7_Exercises.pdf)
 - [Solutions](solutions/2018_Lecture7_Solutions_ex2.pdf)
 
-## Bootstrap 
+### Bootstrap 
 
 - **Description**: motivation for bootstrap; algorithm for nonparametric bootstrap; implementation in R (with connection to MLE exercises)
 - [Slides](slides/2018_Lecture_07.pdf)
