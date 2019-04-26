@@ -1,0 +1,206 @@
+%% LyX 2.0.7.1 created this file.  For more info, see http://www.lyx.org/.
+%% Do not edit unless you really know what you are doing.
+\documentclass[english]{beamer}
+\usepackage[T1]{fontenc}
+\usepackage[latin9]{inputenc}
+\usepackage{listings, fancyvrb}
+\setcounter{secnumdepth}{3}
+\setcounter{tocdepth}{3}
+\setlength{\parindent}{0bp}
+
+\makeatletter
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Textclass specific LaTeX commands.
+ % this default might be overridden by plain title style
+ \newcommand\makebeamertitle{\frame{\maketitle}}%
+ \AtBeginDocument{
+   \let\origtableofcontents=\tableofcontents
+   \def\tableofcontents{\@ifnextchar[{\origtableofcontents}{\gobbletableofcontents}}
+   \def\gobbletableofcontents#1{\origtableofcontents}
+ }
+ \long\def\lyxframe#1{\@lyxframe#1\@lyxframestop}%
+ \def\@lyxframe{\@ifnextchar<{\@@lyxframe}{\@@lyxframe<*>}}%
+ \def\@@lyxframe<#1>{\@ifnextchar[{\@@@lyxframe<#1>}{\@@@lyxframe<#1>[]}}
+ \def\@@@lyxframe<#1>[{\@ifnextchar<{\@@@@@lyxframe<#1>[}{\@@@@lyxframe<#1>[<*>][}}
+ \def\@@@@@lyxframe<#1>[#2]{\@ifnextchar[{\@@@@lyxframe<#1>[#2]}{\@@@@lyxframe<#1>[#2][]}}
+ \long\def\@@@@lyxframe<#1>[#2][#3]#4\@lyxframestop#5\lyxframeend{%
+   \frame<#1>[#2][#3]{\frametitle{#4}#5}}
+ \def\lyxframeend{} % In case there is a superfluous frame end
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% User specified LaTeX commands.
+\usetheme[secheader]{Madrid}
+
+\makeatletter
+\setbeamertemplate{footline}
+{
+  \leavevmode%
+  \hbox{%
+  \begin{beamercolorbox}[wd=.333333\paperwidth,ht=2.25ex,dp=1ex,center]{author in head/foot}%
+    \usebeamerfont{author in head/foot}{Methods and Computing}
+  \end{beamercolorbox}%
+  \begin{beamercolorbox}[wd=.333333\paperwidth,ht=2.25ex,dp=1ex,center]{title in head/foot}%
+    \usebeamerfont{title in head/foot}{Harvard University}
+  \end{beamercolorbox}%
+  \begin{beamercolorbox}[wd=.333333\paperwidth,ht=2.25ex,dp=1ex,right]{date in head/foot}%
+    \usebeamerfont{date in head/foot}{Department of Biostatistics}
+    \insertframenumber{} / \inserttotalframenumber\hspace*{2ex} 
+  \end{beamercolorbox}}%
+  \vskip0pt%
+}
+\makeatother
+
+\makeatother
+
+\usepackage{babel}
+\begin{document}
+
+\title{Biostatistics Preparatory Course:\\
+Methods and Computing}
+
+
+\author{Lecture 5}
+
+
+\date{Linear Regression}
+
+\makebeamertitle
+
+
+\begin{frame}[fragile]{Linear Regression}
+\begin{itemize}
+\item Linear regression is a way to model the association between some continuous
+outcome, $Y$, with a set of predictors, $X_{1}\ldots X_{p}$:
+\[
+Y_{i}=\beta_{0}+\beta_{1}X_{i1}+\ldots+\beta_{p}X_{ip}+\epsilon_{i},\text{
+where } E(\epsilon_{i}) = 0 
+\]
+\pause
+\item This can also be expressed as, 
+\[
+E[Y_i | X_{i1},...,X_{ip}] =\beta_{0}+\beta_{1}X_{i1}+\ldots+\beta_{p}X_{ip}
+\]
+\pause
+\item or as,  
+\[
+E[Y_i | \mathbf{X}_i] = \mathbf{X}_i^T \boldsymbol{\beta}
+\]
+\pause
+\item $\beta_j$ is the change in mean value of $Y$ corresponding to a one unit change in $X_{1}$, holding all other variables constant.
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Assumptions for Ordinary Least Squares}
+
+We will make the following assumptions,
+
+\begin{itemize}
+		\item {\bf Linearity}: the expectation of $Y$ is linear in $X_{1}\ldots X_{p}$
+		\item {\bf Independence}: the $\epsilon_{i}$ are independent
+		\item {\bf Mean zero errors}: the $\epsilon_{i}$ have mean zero, i.e. $E[\epsilon_i] = 0$
+		\item {\bf Equal variance (homoscedasticity)}: the $\epsilon_{i}$ have the same
+		variance, i.e. $Var[\epsilon_i] = \sigma^2$
+\end{itemize}
+
+\textbf{Note:} We are not making any assumptions about $X_j$; they can be continuous, binary, or categorical. This will change interpretations!
+\end{frame}
+
+
+\begin{frame}[fragile]{Estimating $\boldsymbol{\beta}$ with OLS}
+\begin{itemize}
+\item The goal is to estimate $\boldsymbol{\beta} = \{\beta_0, \beta_1, ... , \beta_p\}$ 
+\item We want to minimize the distance between the observed $Y_i$'s and their fitted values (i.e. the residuals)
+\item For the $i$th observation, the residual is:
+
+$$\hat{\epsilon}_i = Y_{i}-\hat{\beta}_{0}-\hat{\beta}_{1}X_{i1}$$
+
+\item Thus, the least squares estimates, $\hat{\beta}_{0}$ and $\hat{\beta}_1$, are those values of $\beta_0$ and $\beta_1$ that minimize,
+\[
+\sum_{i=1}^{n}\left(Y_{i}-\beta_{0}-\beta_{1}X_{i1} \right)^{2}
+\]
+
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}[fragile]{Estimating $\boldsymbol{\beta}$ with OLS}
+\begin{itemize}
+\item When there is more than one covariate, we want to minimize
+
+$$ (\mathbf{y} - \mathbf{X}\boldsymbol{\beta})^T (\mathbf{y} - \mathbf{X} \boldsymbol{\beta}) $$
+
+\item Fortunately, this has a closed-form solution,
+\[
+\widehat{\boldsymbol{\beta}} =
+(\boldsymbol{X}^T \boldsymbol{X})^{-1}\boldsymbol{X}^T
+\boldsymbol{Y}
+\]
+where 
+\[
+\boldsymbol{X} = \begin{bmatrix} 
+  1 & X_{11} & \dots & X_{1p}\\
+  1 & X_{21} & \dots & X_{2p}\\
+  \vdots & \vdots & \ddots & \vdots\\
+  1 & X_{n1} & \dots & X_{np}\\
+  \end{bmatrix};
+\boldsymbol{\beta} = (\beta_0, \dots, \beta_p)^T
+\]
+\item Another way to think of this is as the projection of $Y$ onto the linear subspace spanned by the columns of $\mathbf{X}$. 
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Maximum Likelihood Estimation vs. OLS}
+
+\begin{itemize}
+	\item We did not place any distributional assumptions on the outcome,
+	\begin{itemize}
+	\item We only required that $E[\epsilon_i] = 0$ with constant variance
+	\item In other words, OLS is a \textit{semiparametric} method
+	\end{itemize}
+\pause
+	\item Sometimes, people assume that $\epsilon_i \sim N(0,\sigma^2)$, which means
+	$$Y_i \sim N(\beta_0 + \beta_1X_{i1} + ... + \beta_1X_{ip}, \sigma^2) $$
+	\pause
+	\begin{itemize}
+	\item If this additional assumption is made, then we can instead use maximum likelihood estimation for $\boldsymbol{\beta}$
+	\item This connects to a whole other class of models called generalized linear models (GLMs)
+	\item Interestingly, in this case, you will end up with the same estimates for $\boldsymbol{\beta}$
+	\end{itemize} 
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Inference}
+
+Once you have estimated values for $\boldsymbol{\beta}$, you can perform inference:
+
+\begin{itemize}
+	\item Estimate the standard error for $\hat{\boldsymbol{\beta}}$
+	\item With a large enough sample, asymptotic normality kicks in which makes it easy to do: 
+	\begin{itemize}
+	\item Hypothesis tests of the form: $H_0: \beta_j = 0$
+	\item Construct confidence intervals for $\beta_j$ 
+	\end{itemize}
+	\item If you have a small sample size, you will need to rely on other methods for hypothesis testing and confidence intervals
+\end{itemize}
+
+
+\end{frame}
+
+\begin{frame}[fragile]{Notes on interpreting regression coefficients}
+
+After you have estimated $\beta_j$, you will typically be tasked with interpretation. Be sure to mention:
+
+\begin{itemize}
+	\item The parameter of interest (mean, odds, risk, etc.)
+	\item The value of the \textit{estimated} parameter 
+	\item The groups you are comparing (this depends on how you have coded your covariate!)
+	\item What is happening with other variables in the model (i.e. adjusting for x,y,z)
+\end{itemize}
+
+
+\end{frame}
+
+
+\begin{frame}[fragile]{Exercises: Implementation in R}
+\end{frame} 
+
+
+\end{document}

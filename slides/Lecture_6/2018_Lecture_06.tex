@@ -1,0 +1,334 @@
+%% LyX 2.0.7.1 created this file.  For more info, see http://www.lyx.org/.
+%% Do not edit unless you really know what you are doing.
+\documentclass[english]{beamer}
+\usepackage[T1]{fontenc}
+\usepackage[latin9]{inputenc}
+\usepackage{listings, fancyvrb}
+\setcounter{secnumdepth}{3}
+\setcounter{tocdepth}{3}
+\setlength{\parindent}{0bp}
+
+\makeatletter
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Textclass specific LaTeX commands.
+ % this default might be overridden by plain title style
+ \newcommand\makebeamertitle{\frame{\maketitle}}%
+ \AtBeginDocument{
+   \let\origtableofcontents=\tableofcontents
+   \def\tableofcontents{\@ifnextchar[{\origtableofcontents}{\gobbletableofcontents}}
+   \def\gobbletableofcontents#1{\origtableofcontents}
+ }
+ \long\def\lyxframe#1{\@lyxframe#1\@lyxframestop}%
+ \def\@lyxframe{\@ifnextchar<{\@@lyxframe}{\@@lyxframe<*>}}%
+ \def\@@lyxframe<#1>{\@ifnextchar[{\@@@lyxframe<#1>}{\@@@lyxframe<#1>[]}}
+ \def\@@@lyxframe<#1>[{\@ifnextchar<{\@@@@@lyxframe<#1>[}{\@@@@lyxframe<#1>[<*>][}}
+ \def\@@@@@lyxframe<#1>[#2]{\@ifnextchar[{\@@@@lyxframe<#1>[#2]}{\@@@@lyxframe<#1>[#2][]}}
+ \long\def\@@@@lyxframe<#1>[#2][#3]#4\@lyxframestop#5\lyxframeend{%
+   \frame<#1>[#2][#3]{\frametitle{#4}#5}}
+ \def\lyxframeend{} % In case there is a superfluous frame end
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% User specified LaTeX commands.
+\usetheme[secheader]{Madrid}
+
+\makeatletter
+\setbeamertemplate{footline}
+{
+  \leavevmode%
+  \hbox{%
+  \begin{beamercolorbox}[wd=.333333\paperwidth,ht=2.25ex,dp=1ex,center]{author in head/foot}%
+    \usebeamerfont{author in head/foot}{Methods and Computing}
+  \end{beamercolorbox}%
+  \begin{beamercolorbox}[wd=.333333\paperwidth,ht=2.25ex,dp=1ex,center]{title in head/foot}%
+    \usebeamerfont{title in head/foot}{Harvard University}
+  \end{beamercolorbox}%
+  \begin{beamercolorbox}[wd=.333333\paperwidth,ht=2.25ex,dp=1ex,right]{date in head/foot}%
+    \usebeamerfont{date in head/foot}{Department of Biostatistics}
+    \insertframenumber{} / \inserttotalframenumber\hspace*{2ex} 
+  \end{beamercolorbox}}%
+  \vskip0pt%
+}
+\makeatother
+
+\makeatother
+
+\usepackage{babel}
+\begin{document}
+
+\title{Biostatistics Preparatory Course:\\
+Methods and Computing}
+
+
+\author{Lecture 6}
+
+
+\date{Simulations}
+
+\makebeamertitle
+
+
+\begin{frame}{Recap / Warm-up: Linear Regression}
+In the group exercise 2, we were given the following model: 
+
+$$E[Y | X_1, X_2] = \beta_0 + \beta_1 X_1 + \beta_2 X_2 + \beta_3 X_1 X_2$$
+
+where $Y$ was birthweight, $X_1$ was smoking status, and $X_2$ was mother's weight gain.
+
+\begin{itemize}
+	\item Why might $\beta_3$ be of interest?
+	\pause 
+	\begin{itemize} 
+		\item If you believe that the effect of mother's weight gain varies within levels of smoking status 
+	\end{itemize}
+	\item What are the interpretations of $\beta_1$ and $\beta_2$?
+	\pause
+	\begin{itemize}
+		\item The mean change in birthweight comparing smokers to non-smokers \underline{among mother's who did not gain weight}
+		\item The mean change in birthweight corresponding to a one unit change in mother's weight gain \underline{among non-smokers} 
+	\end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Recap / Warm-up: Linear Regression}
+\footnotesize
+\begin{align*}
+\color{red} E[Y | X_1=1, X_2] & = \hat{\beta}_0 + \hat{\beta}_1 + \hat{\beta}_2 X_2 + \hat{\beta}_3 X_2 \\
+\color{blue} E[Y | X_1=0, X_2] & = \hat{\beta}_0 + \hat{\beta}_2 X_2 
+\end{align*}
+\pause 
+\begin{center}
+\includegraphics[scale=.3]{exercise2}
+\end{center}
+
+\end{frame}
+
+
+\begin{frame}[fragile]{Simulations studies}
+\begin{enumerate}
+	\item What is a simulation?
+	\begin{itemize}
+		\item Numerical technique to conduct experiments on a computer
+		\item In statistics, we typically care about `Monte Carlo' (MC) simulations which involve random sampling from probability distributions
+	\end{itemize}
+	\item Why bother?
+	\begin{itemize}
+		\item When developing a new method, it is important to establish its properties so that it can be used in practice
+		\item {\bf{Case I}}: Analytical derivations of properties are not always possible 
+		\begin{itemize}
+			\item It is often feasible to obtain large sample approximations, but evaluation of the approximation in finite samples is necessary
+		\end{itemize}
+		\item  {\bf{Case II}}: If you can derive analytic results, they usually require assumptions
+		\begin{itemize}
+			\item What are the properties of the method when various conditions are violated?
+		\end{itemize}
+	\end{itemize}
+\end{enumerate}
+\end{frame}
+
+
+\begin{frame}[fragile]{Important terms}
+\begin{itemize}
+\item An \textbf{unbiased estimator} for some parameter means that the expected value of the estimator is equal to the parameter
+\item A confidence interval has \textbf{nominal coverage} if it covers the true value of the parameter the correct proportion of times
+\item The \textbf{size} of a hypothesis test is equal to the probability of rejecting the null hypothesis given that the null is true 
+\item The \textbf{power} of a hypothesis test is equal to the probability of rejecting the null hypothesis given that the null is false 
+\end{itemize}
+\end{frame} 
+
+
+\begin{frame}[fragile]{MC Simulations: The usual questions}
+\begin{itemize}
+\item Under what conditions is an estimator unbiased? 
+
+{\color{blue}{ex.}} Suppose the data is generated according to $$y \sim \beta_0 + \beta_1 x_1 + \beta_2 x_2 + \epsilon$$ but I fit the model $y = \alpha_0 + \alpha_1 x_1$.  When is $\hat{\beta}_1$ unbiased for $\alpha_1$? 
+  
+  \pause
+  \vspace{2mm}
+\item How does the estimator compare to other estimators?  What is its sampling variability?
+
+{\color{blue}{ex.}} Suppose the data is generated according to $$y \sim \alpha_0 + \alpha_1 x_1 + \alpha_2 x_2 +\epsilon$$ with $E(\epsilon) = 0$ and $Var(\epsilon) = \sigma^2 I$.  How do the OLS estimators compare to 
+$$\hat{\alpha}_1 = \frac{\sum_{i = 1}^n (y_i - \bar{y}) (x_i^* - \bar{x}^*)  }{ \sum_{i = 1}^n (x_i - \bar{x}) (x_i^* - \bar{x}^*) } \quad \mbox{and} \quad \hat{\alpha}_0 = \frac{\sum_{i = 1}^n y_i/x_i }{\sum_{i = 1}^n 1/x_i} - \hat{\alpha}_1 \frac{n}{\sum_{i = 1}^n 1/x_i}$$
+where $\bar{x}^*$ is mean of $x_i^* = 1/x_i$?
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}[fragile]{MC Simulations: The usual questions}
+\begin{itemize}
+
+\item Does a confidence interval procedure attain nominal coverage?
+
+{\color{blue}{ex.}}
+\begin{itemize}
+\item The sum of $n$ independent Bernoulli trials with common success probability is distributed according to $Bin(n, \pi)$ 
+\item The MLE for $\pi$ is $\hat{\pi} =
+  \frac{X}{n}$ where $X$ is the observed number of successes
+\item The \emph{Wald 95\% Confidence Interval} for $\pi$ is given by:
+\[
+\left(\hat{\pi} - z_{0.975} \sqrt{\frac{\hat{\pi}(1 - \hat{\pi})}{n}},
+\hat{\pi} + z_{0.975} \sqrt{\frac{\hat{\pi}(1 - \hat{\pi})}{n}} \right)
+\]
+\item The \emph{Score 95\% Confidence Interval} for $\pi$ is given by:
+\scriptsize
+\begin{align*}
+  & \hat{\pi} \left( \frac{n}{n + z_{0.975}^2}\right) +
+  \frac{1}{2}\left(
+    \frac{z_{0.975}^2}{n + z_{0.975}^2} \right) \pm \\
+  & \qquad z_{0.975} \sqrt{\frac{1}{n + z_{0.975}^2}\left[ \hat{\pi} (1 -
+      \hat{\pi}) \left( \frac{n}{n + z_{0.975}^2}\right) + \left(
+        \frac{1}{2}\right)\left( \frac{1}{2}\right) \left(
+        \frac{z_{0.975}^2}{n + z_{0.975}^2}\right)\right]}
+\end{align*}
+\end{itemize}
+How does the coverage compare for both intervals as we increase $n$ and vary $p$? 
+%\item Does a hypothesis testing procedure achieve the specified level? If so, what is the power like?  How does it compare to alternative procedures?
+\end{itemize}
+\vspace{2mm}
+{\bf{How does Monte Carlo simulation help to answer these questions?}}
+\end{frame}
+
+\begin{frame}[fragile]{MC Simulations: The usual questions}
+\begin{itemize}
+\item Does a hypothesis testing procedure achieve the specified size? If so, what is the power like?  How does it compare to alternative procedures?
+
+{\color{blue}ex.} Consider the one sample $t$-test for 
+$$H_0: \mu = 0 \quad \mbox{vs.} \quad H_A: \mu \ne 0$$
+How does the power vary when the data is generated under some alternative hypothesis $\mu \ne \mu_0$?
+\end{itemize}
+\vspace{2mm}
+{\bf{How does Monte Carlo simulation help to answer these questions?}}
+\end{frame}
+
+
+\begin{frame}[fragile]{MC Simulations: Intuition}
+\begin{itemize}
+\item An estimator/test statistic has a true sampling distribution under some set of conditions
+\item We'd like to know the true sampling distribution so we can answer the questions on the previous slide but...
+\begin{enumerate}
+\item The (finite sample) derivation is difficult 
+
+\begin{center} and/or \end{center}
+\item We'd like to see how well the method holds up when assumptions are violated
+\end{enumerate}
+\end{itemize}
+
+\vspace{3mm}
+So, we approximate the sampling distribution of an estimator/test statistic under a particular set of conditions through simulation
+\end{frame}
+
+\begin{frame}[fragile]{How to Approximate the Sampling Distribution}
+\begin{itemize}
+\item Generate $B$ independent data sets according to the data generating process
+\item Compute the value of the estimator/test statistic $T(data)$ for each data set $\rightarrow$  $\{T_1, \dots, T_B \}$
+\end{itemize}
+
+\vspace{3mm}
+If $b$ is large enough, summary statistics using $\{T_1, \dots, T_b \}$ should be good approximations to the true sampling properties of the estimator/test statistic under the specified conditions
+
+{\color{blue}ex.} $T_b$ is the value of $T$ from the $b^{th}$ data set, $b = 1, \dots, B$
+\begin{itemize}
+\item The empirical mean computed with the $B$ data sets is an estimate of the true mean of the sampling distribution of the estimator
+\item The empirical standard error computed with the $B$ data sets is an estimate of the true standard deviation of the sampling distribution of the estimator
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{How can you assess the following?}
+\begin{itemize}
+	\item An \textbf{unbiased estimator} for some parameter means that the expected value of the estimator is equal to the parameter
+	\pause 
+	\begin{itemize}
+		\item In numerous samples generated from the truth, take the mean of the estimated parameters. Is it close to the true value of the parameter?
+	\end{itemize} 
+	\pause 
+	\item A confidence interval has \textbf{nominal coverage} if it covers the true value of the parameter the correct proportion of times
+	\pause 
+	\begin{itemize}
+		\item In numerous samples generated from the truth, calculate the confidence interval, how often does it cover the true value of the parameter?
+	\end{itemize} 
+	\pause 
+	\item The \textbf{size} of a hypothesis test is equal to the probability of rejecting the null hypothesis given that the null is true 
+	\pause
+	\begin{itemize}
+		\item In numerous samples generated from the truth, conduct the hypothesis test, how often does it incorrectly reject the null?
+	\end{itemize} 
+	\pause
+	\item The \textbf{power} of a hypothesis test is equal to the probability of rejecting the null hypothesis given that the null is false 
+	\pause
+	\begin{itemize}
+		\item In numerous samples generated from the truth, conduct the hypothesis test, how often does it correctly reject the null?
+	\end{itemize} 
+\end{itemize}
+\end{frame} 
+
+\begin{frame}{Commonly reported quantities}
+\footnotesize
+Your simulation study has $B$ replicates for some estimator $T$ of $\theta$. 
+\begin{itemize}
+	\item Simulation bias 
+	$$ \textrm{bias}(T) = \frac{1}{b} \sum_{b=1}^B T_b - \theta $$
+	\item Simulation relative bias 
+	$$ \textrm{relative bias}(T) = \frac{\textrm{bias(T)}}{\theta} $$
+	\item Simulation standard deviation
+	$$ \textrm{sd}(T) = \sqrt{\frac{1}{B-1} \sum_{b=1}^B (T_b - \overline{T})^2} $$
+	\item Simulation mean squared error 
+	$$ \textrm{MSE}(T) = \textrm{bias(T)}^2 + \textrm{sd}(T)^2 $$
+\end{itemize}
+Although omitted, you may also be interested in reporting the empirical coverage for confidence interval, power, or size. 
+
+\end{frame}
+
+
+\begin{frame}[fragile]{Tips for Running Your Own Simulation Studies}
+\begin{enumerate}
+\item Setting parameter values:
+\begin{itemize}
+\item First run your code under a favorable setting (make sure it works)
+\item Then choose parameter values that will challenge your method
+\end{itemize}
+\item Don't make $B$ too large to start ($\approx500$)
+\item Save all the estimates and not just the summary statistics 
+\item Set the seed 
+\item Document the code (i.e. comments)
+\item Keep track of the versions of the code you use (i.e. use GitHub)
+\item If you use Rmarkdown, use the cache=TRUE preamble 
+\begin{itemize}
+	\item Your code will only be knitted/run the first time or anytime after it updated. Saves time! 
+\end{itemize}
+\end{enumerate}
+\end{frame}
+
+
+\begin{frame}[fragile]{Tips for Presenting Results}
+\begin{enumerate}
+\item Only present what is interesting
+\begin{itemize}
+\item  {\color{blue}ex.} If the bias is small, just make a comment in the text rather than making a table
+\item {\color{blue}ex.} If two parameter settings are similar, you don't need to include both 
+\item In homework assignments, you will typically be told what to report
+\end{itemize}
+
+\vspace{3mm}
+\item Make the results easy for the reader to understand
+\begin{itemize}
+\item Columns meant to be compared should be side-by-side
+\item Make a graph if possible 
+\end{itemize}
+\end{enumerate}
+\end{frame}
+
+
+\begin{frame}[fragile]{Example: Population Mean}
+\begin{itemize}
+	\item Suppose you are interested in comparing the properties of the following 3 estimators for the mean $\mu$ for $n$ iid draws $X_1, \dots X_n$ with  $X_i \sim f(x)$
+	\begin{enumerate}
+		\item Sample mean, $T^1$
+		\item Sample 15\% trimmed mean, $T^2$
+		\item Sample median, $T^3$
+	\end{enumerate}
+\end{itemize}
+
+\vspace{3mm}
+{\bf{ How would you expect the estimators to compare if $X_i \sim N(1,16)$?}}
+\end{frame}
+
+
+\end{document}
+

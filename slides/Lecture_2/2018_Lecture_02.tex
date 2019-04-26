@@ -1,0 +1,542 @@
+%% LyX 2.0.7.1 created this file.  For more info, see http://www.lyx.org/.
+%% Do not edit unless you really know what you are doing.
+\documentclass[english]{beamer}
+\usepackage[T1]{fontenc}
+\usepackage[latin9]{inputenc}
+\usepackage{listings}
+\setcounter{secnumdepth}{3}
+\setcounter{tocdepth}{3}
+\setlength{\parindent}{0bp}
+
+\makeatletter
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Textclass specific LaTeX commands.
+ % this default might be overridden by plain title style
+ \newcommand\makebeamertitle{\frame{\maketitle}}%
+ \AtBeginDocument{
+   \let\origtableofcontents=\tableofcontents
+   \def\tableofcontents{\@ifnextchar[{\origtableofcontents}{\gobbletableofcontents}}
+   \def\gobbletableofcontents#1{\origtableofcontents}
+ }
+ \long\def\lyxframe#1{\@lyxframe#1\@lyxframestop}%
+ \def\@lyxframe{\@ifnextchar<{\@@lyxframe}{\@@lyxframe<*>}}%
+ \def\@@lyxframe<#1>{\@ifnextchar[{\@@@lyxframe<#1>}{\@@@lyxframe<#1>[]}}
+ \def\@@@lyxframe<#1>[{\@ifnextchar<{\@@@@@lyxframe<#1>[}{\@@@@lyxframe<#1>[<*>][}}
+ \def\@@@@@lyxframe<#1>[#2]{\@ifnextchar[{\@@@@lyxframe<#1>[#2]}{\@@@@lyxframe<#1>[#2][]}}
+ \long\def\@@@@lyxframe<#1>[#2][#3]#4\@lyxframestop#5\lyxframeend{%
+   \frame<#1>[#2][#3]{\frametitle{#4}#5}}
+ \def\lyxframeend{} % In case there is a superfluous frame end
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% User specified LaTeX commands.
+\usetheme[secheader]{Madrid}
+
+\makeatletter
+\setbeamertemplate{footline}
+{
+  \leavevmode%
+  \hbox{%
+  \begin{beamercolorbox}[wd=.333333\paperwidth,ht=2.25ex,dp=1ex,center]{author in head/foot}%
+    \usebeamerfont{author in head/foot}{Methods and Computing}
+  \end{beamercolorbox}%
+  \begin{beamercolorbox}[wd=.333333\paperwidth,ht=2.25ex,dp=1ex,center]{title in head/foot}%
+    \usebeamerfont{title in head/foot}{Harvard University}
+  \end{beamercolorbox}%
+  \begin{beamercolorbox}[wd=.333333\paperwidth,ht=2.25ex,dp=1ex,right]{date in head/foot}%
+    \usebeamerfont{date in head/foot}{Department of Biostatistics}
+    \insertframenumber{} / \inserttotalframenumber\hspace*{2ex} 
+  \end{beamercolorbox}}%
+  \vskip0pt%
+}
+\makeatother
+
+\makeatother
+
+\usepackage{babel}
+\begin{document}
+
+\title{Biostatistics Preparatory Course:\\
+Methods and Computing}
+
+
+\author{Lecture 2}
+
+
+\date{Matrix/vector manipulation and flow control}
+
+\makebeamertitle
+
+\begin{frame}[fragile]{Part I: Vector/Matrix Manipulation} 
+First, we will cover the basics of vector/matrix manipulation in R including:
+\begin{enumerate}
+	\item Elementwise Operations
+	\item Matrix Operations
+\end{enumerate}
+\end{frame}
+
+
+\begin{frame}[fragile]{Vector Elementwise Operations} 
+To begin to understand how R performs vector manipulations, we experiment with some simple operations:\\
+
+\vspace*{2mm}\begin{lstlisting}[basicstyle={\footnotesize\ttfamily}, language=R,
+showstringspaces=false,xleftmargin=0.5in]
+### create vectors
+set.seed(123)
+vec1 <- sample(15,3)
+vec2 <- sample(15,3)
+
+### Perform operations
+vec1 + 3
+vec1^2
+vec1 + vec2
+vec1*vec2
+vec2/vec1
+
+\end{lstlisting}
+\end{frame}
+
+
+\begin{frame}[fragile]{Matrix Elementwise Operations} 
+Now, we will run some simple matrix operations:\\
+
+\vspace*{2mm}\begin{lstlisting}[basicstyle={\footnotesize\ttfamily}, language=R,
+showstringspaces=false,xleftmargin=0.5in]
+### create matrices
+set.seed(123)
+mat1 <- matrix(sample(15,6),2,3,byrow=TRUE)
+mat2 <- matrix(sample(15,6),2,3,byrow=TRUE)
+
+### perform operations
+mat1*3
+mat1^2
+mat1+mat2
+mat1*mat2
+mat1/mat2
+\end{lstlisting}
+\end{frame}
+
+
+\begin{frame}[fragile]{Elementwise Operations: Take-aways} 
+\begin{itemize}
+\item $+$, $-$, $*$, and $/$ perform elementwise addition, subtraction, multiplication and division on matrices and vectors of the same dimension 
+\item If these operators are applied to matrices/vectors of different dimensions, R will recycle the values and display an error 
+\item Applying a boolean operator to a vector/matrix will return a vector/matrix with the corresponding logical values
+\item The \verb+any+ and \verb+all+ functions can be used to evaluate a boolean expression for any/all of the elements of a vector/matrix
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}[fragile]{Matrix operations} 
+To begin to understand how R performs vector manipulations, we experiment with some simple operations:\\
+
+\vspace*{2mm}\begin{lstlisting}[basicstyle={\footnotesize\ttfamily}, language=R,
+showstringspaces=false,xleftmargin=0.5in]
+
+### Dot product 
+vec1%*%vec2 
+
+### Transpose 
+t(mat2) 
+
+### Matrix multiplication
+mat1%*%t(mat2)
+mat1%*%vec1
+
+### Inverse
+matrix.id <- diag(5)
+solve(matrix.id) 
+
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Matrix operations exercises} 
+\end{frame}
+
+
+
+\lyxframeend{}\lyxframe{Flow Control}
+\begin{itemize}
+\item For performing more complex tasks, which may involve repetition or conditional execution of code
+\item All this can be done with flow control, of which we will focus on:
+
+\begin{itemize}
+\item For loop
+\item While loop
+\item Conditional statements
+\end{itemize}
+\end{itemize}
+
+\lyxframeend{}
+
+\begin{frame}[fragile]{For Loop}
+\begin{itemize}
+\item For loops allow for the repetition of a set of commands
+\item The basic syntax of a for loop:
+
+
+\noindent 
+\begin{lstlisting}[basicstyle={\footnotesize\ttfamily},language=R,showstringspaces=false]
+for (___ in ___){
+  # the commands to be repeated
+}
+\end{lstlisting}
+
+
+\item The first blank is for a variable, while the second is for a
+  vector
+\pause
+\item The variable will be set to each element of the vector once, and the
+commands in the loop will be executed once for each element of the
+vector
+\begin{itemize}
+\item The variable may or may not be involved in the commands being
+  repeated
+\end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{For Loop Examples}
+
+
+\noindent 
+\begin{lstlisting}[basicstyle={\footnotesize\ttfamily},
+  language=R, showstringspaces=false]
+# here the variable in the first line is not involved
+# in the command being repeated
+for (i in 1:10){ 
+  ## seq(1, 10) or seq_len(10) could also be used
+  print("Hello")
+}
+\end{lstlisting}
+\pause
+\begin{lstlisting}[basicstyle={\footnotesize\ttfamily}, language=R,
+  showstringspaces=false]
+# Here the variable is involved
+vec <- c("who", "what", "when", "where", "why")
+for(word in vec){
+  print(word)
+}
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{For Loop Exercises}
+\end{frame}
+
+
+\begin{frame}[fragile]{$\tt{apply()}$}
+\begin{itemize}
+	\item Many questions that can be answered using a for loop can be also be evaluated using a R function in the $\tt{apply}$ family
+	\item $\tt{apply()}$ will execute a function on every row or every column of a matrix
+	\[ \tt{apply(X, MARGIN, FUN, \hdots)} \]
+	\item $\tt{X}$ is the matrix or array you would like to apply the function $\tt{FUN}$ to  
+	\item To apply $\tt{FUN}$ to the rows of $\tt{X}$, $\tt{MARGIN}=1$, and to apply $\tt{FUN}$ to the columns of $\tt{X}$, $\tt{MARGIN}=2$
+	\item If additional arguments need to be passed to the function, they can simply be passed to apply
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}[fragile]{$\tt{apply()}$ Examples}
+
+\begin{itemize}
+\item Calculate the column sums of matrix $M$
+\begin{lstlisting}[basicstyle={\footnotesize\ttfamily}, language=R,
+  showstringspaces=false]
+> M <- matrix(1:15, nrow=3, ncol=5)
+> M[2,1] <- M[3,4] <- NA
+> M
+     [,1] [,2] [,3] [,4] [,5]
+[1,]    1    4    7   10   13
+[2,]   NA    5    8   11   14
+[3,]    3    6    9   NA   15
+> apply(M, 2, sum)
+[1] NA 15 24 NA 42
+\end{lstlisting}
+\pause
+\item Remove $\tt{NA}$ values and calculate column sums of matrix $M$
+\begin{lstlisting}[basicstyle={\footnotesize\ttfamily}, language=R,
+  showstringspaces=false]
+> apply(M, 2, sum, na.rm=TRUE)
+[1]  4 15 24 21 42\end{lstlisting}
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}[fragile]{$\tt{lapply()}$ and $\tt{sapply()}$}
+\begin{itemize}
+	\item The $\tt{lapply}$ and $\tt{sapply}$ functions in $\tt{R}$ apply the specified function to each element of a list or vector
+	\item $\tt{lapply()}$ always returns a list
+	\item $\tt{sapply()}$ will return a vector or array if appropriate
+\begin{lstlisting}[basicstyle={\footnotesize\ttfamily}, language=R,
+  showstringspaces=false]
+x.list <- list(a = 1:5, b=6:10, c=11:15)
+
+# save result in a list
+lapply(x.list, mean)
+
+# save result as a vector
+sapply(x.list, mean)
+
+\end{lstlisting}
+
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}[fragile]{User Defined Functions}
+\begin{itemize}
+	\item Basic syntax:
+	
+	
+	\noindent 
+	\begin{lstlisting}[basicstyle={\footnotesize\ttfamily},language=R,showstringspaces=false]
+	function_name <- function(_______){
+	# body of function
+	return(______)
+	}
+	\end{lstlisting}
+	\begin{itemize}
+		\item First blank contains argument names (comma-separated)
+		\item Second blank is what the function outputs
+	\end{itemize}
+	
+	\item To use the function, one just calls the function and fills in the
+	corresponding arguments:
+	
+	
+	\noindent 
+	\begin{lstlisting}[basicstyle={\footnotesize\ttfamily},language=R,showstringspaces=false]
+	function_name(______)
+	\end{lstlisting}
+	
+	
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{User Defined Functions: Input and Output}
+\begin{itemize}
+\item Function arguments:
+\begin{itemize}
+	\item Can be of any type (eg., character, numeric, boolean, list,
+	matrix, data frame, etc.)
+	\item Can have defaults
+	\begin{lstlisting}[basicstyle={\footnotesize\ttfamily},language=R,showstringspaces=false]
+	myfunction <- function(a, b=2){
+	return(paste0(a, " + ", b, ''*x"))
+	}
+	\end{lstlisting}
+	\item Function output:
+	\begin{itemize}
+		%\item \verb+cat+ or \verb+print+ statements will be printed to the
+		%screen as the function runs, but not returned.
+		\item Only one item can be returned, but that item can be of any
+		type/structure.  
+		\item Lists are useful for returning multiple things from
+		one function.
+	\end{itemize}
+\end{itemize}
+
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{User Defined Function Example}
+\begin{itemize}
+\item Here is one example
+
+
+\noindent 
+\begin{lstlisting}[basicstyle={\footnotesize\ttfamily},language=R,showstringspaces=false]
+expit <- function(x){
+return(exp(x) / (1 + exp(x)))
+}
+expit(1)
+expit(-2)
+\end{lstlisting}
+
+
+\item User defined functions are useful when one wants to perform the same
+actions but with different numbers or other arguments
+\item Variables defined inside the function cannot be used outside of
+it
+\begin{lstlisting}[basicstyle={\footnotesize\ttfamily},language=R,showstringspaces=false]
+myfn <- function(x){
+y <- 2 ## Can't reference this outside function
+return(x + y)
+}
+\end{lstlisting}
+\end{itemize}
+\end{frame}
+
+
+
+\begin{frame}[fragile]{$\tt{apply()}$  Exercises}
+\end{frame}
+
+
+
+\begin{frame}[fragile]{Boolean Expressions}
+\begin{definition}[Boolean expressions]
+Statements that are evaluated and return a Boolean value
+\vspace{-0.05in}
+\begin{lstlisting}[basicstyle={\footnotesize\ttfamily},language=R,showstringspaces=false]
+## Examples:
+3 < 5
+3 > 5
+3 == 3
+3 == 5
+\end{lstlisting}
+\vspace{-0.1in}
+\end{definition}
+
+\begin{itemize}
+\item They are often used in flow control to assess whether a certain condition
+is met
+\item Used in conditional statements and while loops
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Boolean Operators: Combining logical expressions}
+
+\begin{definition}[Logical negation]
+  Returns the opposite of the expression 
+  \vspace{-0.05in}
+  \begin{lstlisting}[basicstyle={\footnotesize\ttfamily}, language=R,
+    showstringspaces=false]
+    !(3 < 5)
+  \end{lstlisting}
+  \vspace{-0.1in}
+\end{definition}
+\pause
+\begin{definition}[Logical AND]
+  Returns TRUE only if all expressions are TRUE 
+  \vspace{-0.05in}
+  \begin{lstlisting}[basicstyle={\footnotesize\ttfamily}, language=R,
+    showstringspaces=false]
+    (3 < 5) & (5 < 3)
+  \end{lstlisting}
+  \vspace{-0.1in}
+\end{definition}
+\pause
+\begin{definition}[Logical OR]
+  Returns FALSE only if all expressions are FALSE 
+  \vspace{-0.05in}
+  \begin{lstlisting}[basicstyle={\footnotesize\ttfamily}, language=R,
+    showstringspaces=false]
+    (3 < 5) | (5 < 3)
+  \end{lstlisting}
+  \vspace{-0.1in}
+\end{definition}
+\pause
+\begin{itemize}
+\item To combine Boolean expressions for a vector/matrix, use
+  \verb+any+ and \verb+all+
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Conditional Statements}
+\begin{itemize}
+	\item With conditional statements, we can perform different actions
+	contingent on which of several conditions are met, or not met
+	\item Basic syntax:
+	\noindent 
+	\begin{lstlisting}[basicstyle={\footnotesize\ttfamily}, language=R,
+	showstringspaces=false]
+	if (______){
+	# commands 1
+	} else if (______){
+	# commands 2
+	} else {
+	# commands 3
+	}
+	\end{lstlisting}
+	
+	\item If the first condition is met, \verb+commands 1+ are executed
+	\item If the first condition is not met, then we go to the second
+	condition.  If the second condition is met, \verb+commands 2+ are
+	executed
+	\item If the second condition is also not met, \verb+commands 3+ are
+	executed
+	\item You can chain together as many ``else if'' together as you wish 
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Conditional Statements Examples}
+
+\begin{itemize}
+	\item Basic if-else statement
+	\begin{lstlisting}[basicstyle={\footnotesize\ttfamily}, language=R,
+	showstringspaces=false]
+	num <- rnorm(1, 0, 5)
+	if (num < 0){
+	print("num is negative")
+	} else {
+	print("num is positive")
+	}
+	\end{lstlisting}
+	\pause
+	\item Multilevel if-else statement
+	\begin{lstlisting}[basicstyle={\footnotesize\ttfamily}, language=R,
+	showstringspaces=false]
+	num <- runif(1)
+	if (num < 0.4){
+	print("less than 0.4")
+	} else if(num < 0.8){
+	print("between 0.4 and 0.8")
+	} else {
+	print("greater than 0.8")
+	}
+	\end{lstlisting}
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}[fragile]{While Loop}
+\begin{itemize}
+\item With the for loop, we know exactly how many times the commands
+  will be repeated
+\item With the while loop, there is a condition that must be met for
+  the commands to be repeated
+\item The repetition continues until the condition is no longer met
+\item The basic syntax of a while loop:
+
+\noindent 
+\begin{lstlisting}[basicstyle={\footnotesize\ttfamily}, language=R,
+  showstringspaces=false]
+while (______){
+  # the commands to be repeated
+}
+\end{lstlisting}
+
+\item The blank is for a boolean expression
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{While Loop Example}
+\begin{itemize}
+\item Here are some examples
+
+
+\noindent 
+\begin{lstlisting}[basicstyle={\footnotesize\ttfamily}, language=R,
+  showstringspaces=false]
+i <- 1
+while (i < 10){
+  print(i)
+  i <- i + 1
+}
+
+while ((i < 10) & (runif(1) < 0.5) ){
+  print("heads")
+  i <- i + 1
+}
+\end{lstlisting}
+
+\item The code being repeated needs to progress towards the condition
+  being no longer true, or else the loop will continue infinitely
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{While Loop and Conditional Statement Exercises}
+\end{frame}
+
+
+
+
+\end{document}

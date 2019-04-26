@@ -1,0 +1,494 @@
+%% LyX 2.0.7.1 created this file.  For more info, see http://www.lyx.org/.
+%% Do not edit unless you really know what you are doing.
+\documentclass[english]{beamer}
+\usepackage[T1]{fontenc}
+\usepackage[latin9]{inputenc}
+\usepackage{listings}
+\setcounter{secnumdepth}{3}
+\setcounter{tocdepth}{3}
+\setlength{\parindent}{0bp}
+\usepackage{babel}
+\ifx\hypersetup\undefined
+  \AtBeginDocument{%
+    \hypersetup{unicode=true}
+  }
+\else
+  \hypersetup{unicode=true}
+\fi
+
+\makeatletter
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Textclass specific LaTeX commands.
+ % this default might be overridden by plain title style
+ \newcommand\makebeamertitle{\frame{\maketitle}}%
+ \AtBeginDocument{
+   \let\origtableofcontents=\tableofcontents
+   \def\tableofcontents{\@ifnextchar[{\origtableofcontents}{\gobbletableofcontents}}
+   \def\gobbletableofcontents#1{\origtableofcontents}
+ }
+ \long\def\lyxframe#1{\@lyxframe#1\@lyxframestop}%
+ \def\@lyxframe{\@ifnextchar<{\@@lyxframe}{\@@lyxframe<*>}}%
+ \def\@@lyxframe<#1>{\@ifnextchar[{\@@@lyxframe<#1>}{\@@@lyxframe<#1>[]}}
+ \def\@@@lyxframe<#1>[{\@ifnextchar<{\@@@@@lyxframe<#1>[}{\@@@@lyxframe<#1>[<*>][}}
+ \def\@@@@@lyxframe<#1>[#2]{\@ifnextchar[{\@@@@lyxframe<#1>[#2]}{\@@@@lyxframe<#1>[#2][]}}
+ \long\def\@@@@lyxframe<#1>[#2][#3]#4\@lyxframestop#5\lyxframeend{%
+   \frame<#1>[#2][#3]{\frametitle{#4}#5}}
+ \def\lyxframeend{} % In case there is a superfluous frame end
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% User specified LaTeX commands.
+\usetheme[secheader]{Madrid}
+
+\makeatletter
+\setbeamertemplate{footline}
+{
+  \leavevmode%
+  \hbox{%
+  \begin{beamercolorbox}[wd=.333333\paperwidth,ht=2.25ex,dp=1ex,center]{author in head/foot}%
+    \usebeamerfont{author in head/foot}{Methods and Computing}
+  \end{beamercolorbox}%
+  \begin{beamercolorbox}[wd=.333333\paperwidth,ht=2.25ex,dp=1ex,center]{title in head/foot}%
+    \usebeamerfont{title in head/foot}{Harvard University}
+  \end{beamercolorbox}%
+  \begin{beamercolorbox}[wd=.333333\paperwidth,ht=2.25ex,dp=1ex,right]{date in head/foot}%
+    \usebeamerfont{date in head/foot}{Department of Biostatistics}
+    \insertframenumber{} / \inserttotalframenumber\hspace*{2ex} 
+  \end{beamercolorbox}}%
+  \vskip0pt%
+}
+\makeatother
+
+\makeatother
+
+\newtheorem{mydef}{Definition}[section]
+
+%% Update the formatting of \alert{}
+\setbeamerfont{alerted text}{series=\bfseries}
+\setbeamercolor{alerted text}{fg=black}
+
+\begin{document}
+
+\title{Biostatistics Preparatory Course:\\
+Methods and Computing}
+
+
+\author{Lecture 1}
+
+
+\date{Intro, R Basics, Data Types/Structures}
+
+\makebeamertitle
+
+\lyxframeend{}\lyxframe{Introductions}
+\begin{itemize}
+\item Instructor: Izzie Fulcher
+\item Email: isabelfulcher@g.harvard.edu
+\end{itemize}
+
+
+\lyxframeend{}
+
+
+\lyxframeend{}\lyxframe{Structure of the Course}
+
+\begin{itemize}
+\item Focus on \emph{basic} programming in R
+\item Statistical topics will be mixed in
+\pause
+\item Each class will consist of:
+
+\begin{itemize}
+\item A short lecture on topics in R relevant for biostatistics (20-30 minutes)
+\item For the remainder of the session, we will complete several exercises, often broken up into groups
+\end{itemize}
+\item Solutions to exercises and slides will be posted after the each session
+\item Bringing a laptop is recommended, since programming is most
+  easily learned by \emph{doing}
+\end{itemize}
+
+\lyxframeend{}
+
+\lyxframeend{}\lyxframe{Topics covered}
+
+The first two sessions will go over basics in R programming, then we will start to mix in statistical topics:
+\begin{itemize}
+		\item Probability distributions  
+		\item Linear regression (if time, generalized linear models)
+		\item Monte Carlo simulations
+		\item Maximum likelihood estimation
+		\item Bootstrap
+\end{itemize}
+
+\pause
+
+All programming will be done in R, but we will also use,
+\begin{itemize}
+	\item Rmarkdown and LaTeX
+	\item Cluster computing 
+\end{itemize}
+
+
+\lyxframeend{}
+
+
+\lyxframeend{}\lyxframe{What is R?}
+\begin{itemize}
+\item Free programming language for statistical computing and graphics
+\item Easy way to distribute one's own packages for novel methods
+\end{itemize}
+
+\lyxframeend{}
+
+
+\lyxframeend{}\lyxframe{How to get R and Rstudio}
+\begin{itemize}
+\item R --- the language and GUI (Graphical User Interface)
+
+\begin{itemize}
+\item \href{https://cran.r-project.org}{https://cran.r-project.org}
+\end{itemize}
+\pause
+\item Rstudio --- an IDE (Integrated Development Environment)
+
+\begin{itemize}
+\item \href{http://www.rstudio.com/products/rstudio/download/}{http://www.rstudio.com/products/rstudio/download/}
+\end{itemize}
+\end{itemize}
+
+\vspace{3mm}
+
+\lyxframeend{}
+
+\begin{frame}[fragile]{R Basics}
+% \begin{definition}[Comment]
+%   Any line of text preceded by a ``\#''
+% \end{definition}
+% \begin{itemize}
+% \item Example:\\ \verb+# This is a comment+
+% \end{itemize}
+
+\begin{definition}[Variables]
+  Names that are assigned values (which can be of various data types)
+  \begin{lstlisting}[basicstyle={\footnotesize\ttfamily},language=R,showstringspaces=false]
+# Example
+a <- 3
+\end{lstlisting}
+\end{definition}
+
+\begin{itemize}
+%\item Do not need declaration in R
+\item Some variables are built in
+  (eg., \verb+pi+)
+%\item Be careful with name choices---can override built-in names
+\end{itemize}
+\pause
+\begin{definition}[Functions]
+A piece of code that performs a task (may take one or more
+arguments)\\
+
+\begin{lstlisting}[basicstyle={\footnotesize\ttfamily},language=R,showstringspaces=false]
+# Examples
+log(3)
+exp(3)
+\end{lstlisting}
+\end{definition}
+
+\begin{itemize}
+\item Multiple arguments in functions are separated by commas
+\end{itemize}
+\end{frame}
+
+
+
+\begin{frame}[fragile]{R Basics: Types of Commands}
+\begin{definition}[Assignment]
+The command is evaluated, its value passed to variable and not
+printed\\
+
+\begin{lstlisting}[basicstyle={\footnotesize\ttfamily},language=R,showstringspaces=false]
+# Examples:
+a <- a + 3
+b <- log(3)
+\end{lstlisting}
+\end{definition}
+\pause
+\begin{definition}[Expression]
+The command is evaluated, its value is printed and not retained\\
+ 
+\begin{lstlisting}[basicstyle={\footnotesize\ttfamily},language=R,showstringspaces=false]
+# Examples:
+1 + 1
+a + 3
+log(a)
+\end{lstlisting}
+\end{definition}
+
+\end{frame}
+
+\begin{frame}[fragile]{Removing objects from workspace}
+\begin{itemize}
+	\item Objects stored in the workspace can be displayed with \verb+ls()+ 
+	\item Variables can be deleted with  \verb+rm()+ 
+	\item  \verb+rm(list = ls())+ will remove all objects from the current workspace
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}[fragile]{R basics: Packages}
+\begin{itemize}
+\item Packages are ways to distribute content and may contain:
+
+\begin{itemize}
+\item Datasets
+\item Functions
+\end{itemize}
+\item Packages must first be installed and loaded before they can
+be used:
+
+
+\noindent 
+\begin{lstlisting}[basicstyle={\footnotesize\ttfamily},language=R,showstringspaces=false]
+# Example:
+install.packages("matrixStats")
+library("matrixStats")
+\end{lstlisting}
+
+\item You can check the documentation for a package with \verb+help(package = `packagename')+ 
+
+\end{itemize}
+\end{frame}
+
+
+
+
+
+\begin{frame}[fragile]{Exercise 1}
+\begin{itemize}
+\item Try out commands of your own, both assignment and expression:
+\begin{enumerate}
+\item Create a variable $x$ with value 2
+\item Subtract 7 from $x$
+\item Create a new variable $y  = x - 7$
+\end{enumerate}
+\item Install and load a package
+  \begin{itemize}
+  \item \verb+ggplot2+
+  \item \verb+mvtnorm+
+  \item \verb+stringr+
+  \end{itemize}
+\item Use basic functions, such as: \\
+ \verb+log()+, \verb+exp()+, \verb+abs()+, \verb+sqrt()+, \verb+ceiling()+, \verb+trunc()+
+%\item Familiarize yourself with Rstudio
+\item Practice using the help (? followed by function name)
+  \begin{itemize}
+  \item \verb+ceiling+
+  \end{itemize}
+\item Once you have completed the above, remove all objects from your workspace
+\end{itemize}
+
+\end{frame}
+
+
+
+
+
+\begin{frame}[fragile]{Common Data Types in R}
+\begin{definition}[Character]
+Always in quotations and do not have numerical value
+\vspace{-0.05in}
+\begin{lstlisting}[basicstyle={\footnotesize\ttfamily},language=R,showstringspaces=false]
+# Example:
+"abc123"
+\end{lstlisting}
+\vspace{-0.1in}
+\end{definition}
+\pause
+\begin{definition}[Boolean]
+A logical value that takes one of the values TRUE or FALSE
+\vspace{-0.05in}
+\begin{lstlisting}[basicstyle={\footnotesize\ttfamily},language=R,showstringspaces=false]
+# Example:
+TRUE
+\end{lstlisting}
+\vspace{-0.1in}
+\end{definition}
+\pause
+\begin{definition}[Numeric]
+A numeric value (integer or decimal)
+\vspace{-0.05in}
+\begin{lstlisting}[basicstyle={\footnotesize\ttfamily},language=R,showstringspaces=false]
+# Examples:
+24
+pi
+\end{lstlisting}
+\vspace{-0.1in}
+\end{definition}
+\end{frame}
+
+\begin{frame}[fragile]{Common Data Structures in R: Vectors}
+\begin{itemize}
+\item Ways to create vectors:
+
+
+\noindent 
+\begin{lstlisting}[basicstyle={\footnotesize\ttfamily},language=R,showstringspaces=false]
+vec1 <- c(1,2,3)
+vec2 <- 1:10
+vec3 <- seq(1,10,0.5)
+vec4 <- rep(1,10)
+\end{lstlisting}
+
+\pause
+
+\item Vectors are referenced by the index for both assignment and expression:
+
+
+\noindent 
+\begin{lstlisting}[basicstyle={\footnotesize\ttfamily},language=R,showstringspaces=false]
+vec1[1]
+vec1[1] <- 6
+\end{lstlisting}
+
+
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Common Data Structures in R: Matrices}
+\begin{itemize}
+\item Can create a matrix from scratch:
+  \noindent
+  \begin{lstlisting}[basicstyle={\footnotesize\ttfamily}, language=R,
+    showstringspaces=false]
+mymat <- matrix(1:10, nrow=2, ncol=5, byrow=TRUE) 
+mymat2 <- matrix(0, nrow=3,ncol=4)
+  \end{lstlisting}
+  \begin{itemize}
+  \item If the first argument to \verb+matrix+ is a vector, 
+    \verb+nrow*ncol+ must be the length of the vector
+  \item If the first argument is a scalar, the matrix will contain
+    only the scalar value
+  \end{itemize}
+
+
+\item Can also combine vectors of same length to form matrices:
+
+
+\noindent 
+\begin{lstlisting}[basicstyle={\footnotesize\ttfamily},language=R,showstringspaces=false]
+vec1 <- c(1, 2, 3)
+vec2 <- c(2, 3, 4)
+mat1 <- rbind(vec1, vec2)
+mat2 <- cbind(vec1, vec2)
+\end{lstlisting}
+
+\pause
+
+\item Matrices are referenced by their row and column number for assignment
+and expression:
+
+
+\noindent 
+\begin{lstlisting}[basicstyle={\footnotesize\ttfamily},language=R,showstringspaces=false]
+mymat[1, 2]
+mymat[1, 2] <- 6
+\end{lstlisting}
+
+
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Other Data Structures in R: Combining Data Types}
+\begin{itemize}
+\item Vectors and matrices contain one type of data at a time
+% \item There are other more complex data structures in R that can accommodate
+% multiple data types
+\end{itemize}
+\begin{definition}[List]
+A collection of objects of multiple types
+\vspace{-0.05in}
+\begin{lstlisting}[basicstyle={\footnotesize\ttfamily},language=R,showstringspaces=false]
+a <- 1
+b <- "a string :)"
+mylist <- list(a, b)
+mylist[[1]]
+\end{lstlisting}
+\vspace{-0.1in}
+\end{definition}
+\pause
+\begin{definition}[Data frame]
+A list of vectors of the same length (can be manipulated like a
+matrix)
+\vspace{-0.05in}
+\begin{lstlisting}[basicstyle={\footnotesize\ttfamily},language=R,showstringspaces=false]
+x <- c("a", "b", "c")
+y <- c(TRUE, TRUE, FALSE)
+z <- data.frame(x, y)
+z[1, 1]
+z$x
+\end{lstlisting}
+\vspace{-0.1in}
+\end{definition}
+\end{frame}
+
+\begin{frame}[fragile]{Some Useful Commands}
+\begin{itemize}
+	\item \verb+class()+ will display the object class
+	\item\verb+dim()+ will display the dimension of a matrix
+	\item \verb+length()+ will display the number of elements in an object
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Exercise 2}
+\begin{itemize}
+\item Create a $3 \times 4$ matrix, $M$, from a vector of length 12 containing all 1s
+\item Create 3 vectors of length 5: one character, one numeric and one boolean called $char.vec$, $num.vec$, and $bool.vec$ respectively
+\item Create a data frame called $mydata$ with the 3 vectors you created
+\item Create a list called $mylist$ with the 3 vectors you created
+\item Convert $M$ to a data frame. Check you have done this using \verb+class()+
+\item Name the columns of $M$ using \verb+colnames()+ 
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Generating empty structures}
+\begin{itemize}
+	\item Often, it's useful to make empty ``containers'' into which you
+	will put results
+	\item To make empty lists or vectors: \verb+vector+ function
+	\begin{lstlisting}[basicstyle={\footnotesize\ttfamily}, language=R,
+	showstringspaces=false]
+	empty.list     <- vector(length=3, mode="list")
+	empty.num.vec  <- vector(length=2, mode="numeric")
+	empty.char.vec <- vector(length=5, mode="character")
+	\end{lstlisting}
+	\item To make an empty matrix: make a matrix filled with \verb+NA+
+	\begin{lstlisting}[basicstyle={\footnotesize\ttfamily}, language=R,
+	showstringspaces=false]
+	empty.matrix <- matrix(NA, nrow=5, ncol=6)
+	\end{lstlisting}
+	\begin{itemize}
+		\item This makes it easy to see if something didn't get filled in
+	\end{itemize}
+\end{itemize}
+\end{frame}
+
+
+\end{document}
+
+
+
+
+
+
+
+\lyxframeend{}\lyxframe{Rstudio}
+\includegraphics<1>[width=\textwidth, page=1, clip=true, trim=0in 0.5in
+0in 0.5in]{RStudio_window.pdf}
+\includegraphics<2>[width=\textwidth, page=2, clip=true, trim=0in 0.5in
+0in 0.5in]{RStudio_window.pdf}
+\includegraphics<3>[width=\textwidth, page=3, clip=true, trim=0in 0.5in
+0in 0.5in]{RStudio_window.pdf}
+\includegraphics<4>[width=\textwidth, page=4, clip=true, trim=0in 0.5in
+0in 0.5in]{RStudio_window.pdf}
+\includegraphics<5>[width=\textwidth, page=5, clip=true, trim=0in 0.5in
+0in 0.5in]{RStudio_window.pdf}
+\lyxframeend{}
+
+t
