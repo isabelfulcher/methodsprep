@@ -50,8 +50,8 @@ This course consisted of nine 90-minute sessions to prepare incoming biostatisti
 
 ### Additional handouts
 
-- [Cluster computing (SLURM)](Lecture_8/O2_cluster_overview.pdf)
-- [LaTeX](Lecture_9/texstudio_overview.pdf)
+- [Cluster computing (SLURM)](slides/Lecture_8/O2_cluster_overview.pdf)
+- [LaTeX](slides/Lecture_9/texstudio_overview.pdf)
 
 
 **Source code available [here](https://github.com/isabelfulcher/methodsprep)**
